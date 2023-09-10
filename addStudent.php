@@ -50,7 +50,7 @@ if(isset($_POST['submit']) && isset($_GET['id'])){
                 });
                 var delay = 2000;
                 setTimeout(function () {
-                    window.location.href = 'index.php';
+                    window.location.href = 'listing.php';
                 }, delay);
             </script>";
         } else {
@@ -86,7 +86,7 @@ if (isset($_POST['submit']) && !isset($_GET['id'])) {
       });
       var delay = 2000;
       setTimeout(function () {
-        window.location.href = 'index.php';
+        window.location.href = 'listing.php';
       }, delay);
         </script>";
     } else {

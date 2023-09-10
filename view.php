@@ -1,10 +1,12 @@
 <?php
 session_start();
 require_once './connection.php';
+//logout code
 if ($_GET['id']) {
     session_unset();
     session_destroy();
 }
+//After login User detail fetch
 if ($_SESSION['id'] != '') {
     $id = $_SESSION['id'];
     $sql = "SELECT * FROM students_details WHERE id = $id";
@@ -17,7 +19,7 @@ if ($_SESSION['id'] != '') {
     $enrollment = $row['enrollment'];
     $phone = $row['phone'];
 } else {
-    header("Location:login.php");
+    header("Location:index.php");
 }
 require_once './header.php'
 ?>
@@ -38,7 +40,6 @@ require_once './header.php'
                                 echo "Enrollment : " . $enrollment . "<br>";
                                 echo "Phone : " . $phone . "<br>";
                                 ?>
-
                             </p>
                             <a href="view.php?id=<?php echo $id; ?>" class="btn btn-primary">Logout</a>
                         </div>
@@ -48,7 +49,6 @@ require_once './header.php'
         </div>
     </div>
 </section>
-
 <?php
 require_once './footer.php';
 ?>

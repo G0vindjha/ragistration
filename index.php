@@ -1,59 +1,87 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ERROR);
+
 require_once 'connection.php';
-$sql = "SELECT * FROM students_details"; 
-$result = $conn->query($sql);
-
-$tabledata = "";
-$sr = 0;
-if(empty($result->num_rows)){
-    $tabledata = "<tr><td colspan='8'> <div class = 'text-center text-danger' >No Record found </div></td></tr>";
+if(isset($_POST['submit'])){
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    if($email == 'admin@gmail.com' && $password = 'shrusti'){
+        header("Location:listing.php");
+    }
+    $sql = "SELECT * FROM students_details WHERE email = '$email' AND password = $password";
+    $result = $conn->query($sql);
+    $row = mysqli_fetch_assoc($result);
+    $name =  $row['firstname']." ".$row['lastname'];
+    $id =  $row['id'];
+    if ($result->num_rows != 0) {
+        session_start();
+        $_SESSION['id'] = $id;
+        $popup =  "<script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Success',
+        text: 'Wellcome $name',
+      });
+      var delay = 2000;
+      setTimeout(function () {
+        window.location.href = 'view.php';
+      }, delay);
+        </script>";
+    } else {
+        $popup =  "<script>
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Invalid Email or Password!!!',
+      });
+      var delay = 2000;
+      setTimeout(function () {
+        window.location.href = 'index.php';
+      }, delay);
+        </script>";
+    }
 }
-foreach ($result as $value) {
-    $sr++;
-    $name = $value['firstname']." ".$value['lastname'];
-    $gender = $value['gender'];
-    $enrollment = $value['enrollment'];
-    $streem = $value['streem'];
-    $email = $value['email'];
-    $phone = $value['phone'];
-    $updateBtn = "<a href='addStudent.php?id=".$value['id']."' type='button' class='btn btn-outline-success'>update</a>";
-    $deleteBtn = "<a href='delete.php?id=".$value['id']."' type='button' class='btn btn-outline-danger'>delete</a>";
-    $tabledata .= "<tr>
-    <td>$sr</td>
-    <td>$name</td>
-    <td>$gender</td>
-    <td>$enrollment</td>
-    <td>$streem</td>
-    <td>$email</td>
-    <td>$phone</td>
-    <td>$updateBtn $deleteBtn</td>
-    </tr>";
 
-}
-require_once './header.php';
+require_once 'header.php';
+echo $popup;
 ?>
-<div class="gradient-custom text-light text-center py-2 mb-4">
-    <h1>Student List</h1>
-</div>
-<div class="d-flex justify-content-end mb-3 col-11">
-    <a href="./addStudent.php" type="button" class="btn gradient-custom-btn">Add Student</a>
-</div>
-<div class="col-10 d-flex justify-content-center mx-auto">
-<table class="table table-striped">
-    <tr>
-        <th>SR</th>
-        <th>Name</th>
-        <th>Gender</th>
-        <th>Enrollment</th>
-        <th>Stream</th>
-        <th>Email</th>
-        <th>Phone Number</th>
-        <th>Action</th>
-    </tr>
-  <?php echo $tabledata;?>
-</table>
-</div>
-
-<?php 
-require_once './footer.php';
+<section class="gradient-custom vh-100">
+    <div class="container py-5 h-100">
+        <div class="row justify-content-center align-items-center h-80">
+            <div class="col-12 col-lg-9 col-xl-7">
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">Login</h2>
+                        <form class="row g-3 needs-validation" method="post" novalidate>
+                            <div class="col-md-12">
+                                <label for="email" class="form-label">Email</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                    <input type="email" class="form-control" id="email" name="email" aria-describedby="inputGroupPrepend" value="<?php echo $email;?>" required>
+                                    <div class="invalid-feedback">
+                                        Enter email for login.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" value="<?php echo $password;?>" name="password" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid Password.
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn gradient-custom-btn text-light" type="submit" name="submit">submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<?php
+require_once 'footer.php';
 ?>
