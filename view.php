@@ -7,8 +7,8 @@ if ($_GET['id']) {
     session_destroy();
 }
 //After login User detail fetch
-if ($_SESSION['id'] != '') {
-    $id = $_SESSION['id'];
+if ($_SESSION['id'] != '' || $_GET['admin_view_id'] != '') {
+    $id = ($_GET['admin_view_id'] != '') ? $_GET['admin_view_id'] : $_SESSION['id'];
     $sql = "SELECT * FROM students_details WHERE id = $id";
     $result = $conn->query($sql);
     $row = mysqli_fetch_assoc($result);
@@ -18,6 +18,14 @@ if ($_SESSION['id'] != '') {
     $streem = $row['streem'];
     $enrollment = $row['enrollment'];
     $phone = $row['phone'];
+
+    if($_GET['admin_view_id'] != ''){
+        $backUrl = "<a href='listing.php' class='btn btn-primary'>Back</a>";
+    }
+    else{
+        $backUrl = "<a href='view.php?id=$id' class='btn btn-danger'>Logout</a>";
+    } 
+    
 } else {
     header("Location:index.php");
 }
@@ -41,7 +49,9 @@ require_once './header.php'
                                 echo "Phone : " . $phone . "<br>";
                                 ?>
                             </p>
-                            <a href="view.php?id=<?php echo $id; ?>" class="btn btn-primary">Logout</a>
+                            <?php
+                                echo $backUrl;
+                            ?>
                         </div>
                     </div>
                 </div>
