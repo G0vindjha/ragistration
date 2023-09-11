@@ -2,12 +2,14 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
+session_start();
 
 require_once 'connection.php';
 if(isset($_POST['submit'])){
     $email = $_POST['email'];
     $password = $_POST['password'];
     if($email == 'admin@gmail.com' && $password = 'shrusti'){
+        $_SESSION['id'] = 'admin';
         header("Location:listing.php");
     }
     $sql = "SELECT * FROM students_details WHERE email = '$email' AND password = $password";
@@ -16,7 +18,6 @@ if(isset($_POST['submit'])){
     $name =  $row['firstname']." ".$row['lastname'];
     $id =  $row['id'];
     if ($result->num_rows != 0) {
-        session_start();
         $_SESSION['id'] = $id;
         $popup =  "<script>
       Swal.fire({

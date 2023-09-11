@@ -1,5 +1,16 @@
 <?php
+session_start();
+
+if($_GET['id'] == 'admin'){
+    session_unset();
+    session_destroy();
+}
+if($_SESSION['id'] != 'admin'){
+header("Location:index.php");
+}
+
 require_once 'connection.php';
+
 $sql = "SELECT * FROM students_details"; 
 $result = $conn->query($sql);
 
@@ -35,8 +46,13 @@ foreach ($result as $value) {
 }
 require_once './header.php';
 ?>
-<div class="gradient-custom text-light text-center py-2 mb-4">
-    <h1>Student List</h1>
+<div class="gradient-custom text-light text-center py-2 mb-4 row">
+    <div class="col-10">
+        <h1>Student List</h1>
+    </div>
+    <div class="col-2">
+    <a href="listing.php?id=admin" type="button" class="btn gradient-custom-btn">Logout</a>
+</div>
 </div>
 <div class="d-flex justify-content-end mb-3 col-11">
     <a href="./addStudent.php" type="button" class="btn gradient-custom-btn">Add Student</a>
